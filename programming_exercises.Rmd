@@ -1,6 +1,6 @@
 ---
 title: "Programming Exercises"
-author: "Your name"
+author: "Gustavo Arruda Franco"
 output: github_document
 ---
 
@@ -61,7 +61,7 @@ x
 
 #Generalized this task on a function as well.
 
-sqr_function <- function(a){
+sqr_for <- function(a){
   output <- vector("integer", length(a)) #Assigned the size of the output for efficiency
   for (i in seq_along(a)){
     output[i] <- a[i] ^ 2 #Substitutes each item in the blank output for squared of homologous item within input vector
@@ -70,13 +70,23 @@ sqr_function <- function(a){
   return(kable(vis_result, col.names = c("x", "x^2"))) #Makes visualization of this function easier through a table
 }
 
-sqr_function(x) #Called specified vector into function
+sqr_for(x) #Called specified vector into function
 
 ```
 
 ### Using a `map` function
 
 ```{r}
+sqr_function <- function(a){ #To make the map method work I need a pre-defined squaring function
+  squared <- a ^ 2
+}
+sqr_map <- function(a){ #This function takes the previous one and applies it to a whole vector, creating a table for easy visualization in the end
+  squared_vector <- map_dbl(a, sqr_function)
+  sqr_vis <- data.frame(a, squared_vector)
+  return(kable(sqr_vis, col.names = c("x", "x^2")))
+}
+
+sqr_map(x)
 
 ```
 

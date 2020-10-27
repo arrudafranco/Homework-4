@@ -1,6 +1,6 @@
 Programming Exercises
 ================
-Your name
+Gustavo Arruda Franco
 
 ## Load necessary libraries
 
@@ -176,7 +176,7 @@ x
 ``` r
 #Generalized this task on a function as well.
 
-sqr_function <- function(a){
+sqr_for <- function(a){
   output <- vector("integer", length(a)) #Assigned the size of the output for efficiency
   for (i in seq_along(a)){
     output[i] <- a[i] ^ 2 #Substitutes each item in the blank output for squared of homologous item within input vector
@@ -185,7 +185,7 @@ sqr_function <- function(a){
   return(kable(vis_result, col.names = c("x", "x^2"))) #Makes visualization of this function easier through a table
 }
 
-sqr_function(x) #Called specified vector into function
+sqr_for(x) #Called specified vector into function
 ```
 
 |  x | x^2 |
@@ -222,6 +222,52 @@ sqr_function(x) #Called specified vector into function
 |  1 |   1 |
 
 ### Using a `map` function
+
+``` r
+sqr_function <- function(a){ #To make the map method work I need a pre-defined squaring function
+  squared <- a ^ 2
+}
+sqr_map <- function(a){ #This function takes the previous one and applies it to a whole vector, creating a table for easy visualization in the end
+  squared_vector <- map_dbl(a, sqr_function)
+  sqr_vis <- data.frame(a, squared_vector)
+  return(kable(sqr_vis, col.names = c("x", "x^2")))
+}
+
+sqr_map(x)
+```
+
+|  x | x^2 |
+| -: | --: |
+| 30 | 900 |
+| 29 | 841 |
+| 28 | 784 |
+| 27 | 729 |
+| 26 | 676 |
+| 25 | 625 |
+| 24 | 576 |
+| 23 | 529 |
+| 22 | 484 |
+| 21 | 441 |
+| 20 | 400 |
+| 19 | 361 |
+| 18 | 324 |
+| 17 | 289 |
+| 16 | 256 |
+| 15 | 225 |
+| 14 | 196 |
+| 13 | 169 |
+| 12 | 144 |
+| 11 | 121 |
+| 10 | 100 |
+|  9 |  81 |
+|  8 |  64 |
+|  7 |  49 |
+|  6 |  36 |
+|  5 |  25 |
+|  4 |  16 |
+|  3 |   9 |
+|  2 |   4 |
+|  1 |   1 |
 
 ## Write a function to calculate length of sides in a right-triangle using the Pythagorean Theorem
 

@@ -22,6 +22,7 @@ uniq_for <- function(a) {
   len_out <- vector("integer", length = ncol(a))
   for (i in seq_along(a)){
     uniq_out[i] <- unique(a[i])
+    print(uniq_out)
     len_out[i] <- length(uniq_out[i])
   }
   return(len_out)
@@ -35,13 +36,15 @@ uniq_for(iris)
 
 ```{r}
 
+#Generalized the task into a function.
+
 uniq_map <- function(a) {
-  uniq_val <- map(a, unique)
-  count_uniq <- map_int(uniq_val, length)
-  return(kable(count_uniq, col.names = "Unique Values", caption = "Count of Unique Values per Column"))
+  uniq_val <- map(a, unique) #First, it creates a dataframe just with the unique values in each column
+  count_uniq <- map_int(uniq_val, length) #Second, it creates a vector with the length of each column
+  return(kable(count_uniq, col.names = "Unique Values", caption = "Count of Unique Values per Column")) #At last, it makes the visualization prettier with a decent table explaining values
 }
 
-uniq_map(iris)
+uniq_map(iris) #Then, I just needed to call the specified dataframe "Iris" into function
 
 ```
 
@@ -55,6 +58,19 @@ x
 ### Using a `for` loop
 
 ```{r}
+
+#Generalized this task on a function as well.
+
+sqr_function <- function(a){
+  output <- vector("integer", length(a)) #Assigned the size of the output for efficiency
+  for (i in seq_along(a)){
+    output[i] <- a[i] ^ 2 #Substitutes each item in the blank output for squared of homologous item within input vector
+  }
+  vis_result <- data.frame(a, output) #Creates dataframe comparing output and input side to side
+  return(kable(vis_result, col.names = c("x", "x^2"))) #Makes visualization of this function easier through a table
+}
+
+sqr_function(x) #Called specified vector into function
 
 ```
 

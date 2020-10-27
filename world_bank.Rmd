@@ -44,6 +44,8 @@ median_year <- group_by(wb_gini_military, Year) %>%
   summarize(Median_GINI_year = median(GINI),
             Median_Exp_year = median(Military_Exp_GDP))
 
+#The above piece of code groups the dataframe by year then summarizes it for medians of GINI and Military Expenditure/GDP.
+
 gini_military_tier <- wb_gini_military %>%
   mutate(GINI_tiers = ifelse(GINI < 35, "Low Inequality", NA),
          GINI_tiers = ifelse(GINI >= 35 & GINI < 50, "Medium Inequality", GINI_tiers),
@@ -52,19 +54,20 @@ gini_military_tier <- wb_gini_military %>%
   summarize(Median_GINI_year = median(GINI),
             Median_Exp_year = median(Military_Exp_GDP))
 
+#The above piece of code does the same as the first, but also adds a new column categorizing the GINI indices by three tiers.
+
 ggplot(wb_gini_military, aes(y = GINI, x = Military_Exp_GDP)) +
   geom_density_2d() +
   labs(y = "GINI", x = "Military Expenditure/GDP", title = "Density of GINI x Military Expenditure/GDP Observations per Country per Year")
-```
 
-#ggplot(median_country, aes(y = Median_GINI_country, x = Median_Exp_country)) +
- # geom_density_2d() +
-  #labs(y = "GINI", x = "Military Expenditure/GDP", title = "Density of GINI x Military Expenditure/GDP Observations per Country Median per Year")
+```
   
-  #Decent. Three perceptible clusters: very low military expenditure and high
-#Gini closer to the left axis; dense area around 1.5% expenditure and 30 Gini; no apparent
-#causality, but outliers are perpendicular not diagonal.
-  
+The above graph shows the density of observations of the Military Expenditure/GDP versus GINI index, for each country in each year. For those not familiar with these graphs, closer lines means increase in a third dimension. In this case, the third dimension would be a simple count.
+
+There are two apparent clusters: very low military expenditure and high GINI indices right next to the y-axis; and the main cluster for medium expenditure and medium GINI indices.
+
+At last, the graph shows a probable low correlation between the two variables. The shape follows a perpendicular relation rather than some diagonal one. In other words, the tails go towards high GINI and low military expenditure/GDP on one hand; and low GINI and high military expenditure/GDP on the other.
+
 ```{r}
 ggplot(median_year, aes(x = Year, y = Median_GINI_year)) +
   geom_line() +
@@ -72,21 +75,30 @@ ggplot(median_year, aes(x = Year, y = Median_GINI_year)) +
   labs(y = "Median of GINI", x = "Years", title = "Worldwide Median of GINI per Year")
 ```
 
+This plot shows the evolution of worldwide GINI index medians throughout the years. A way to interpret the plot would be through a relation between the end of the Cold War and an increase in worldwide inequality, with a valley around the 2000s and another spike after the 2008 depression. The smoothed line shows that the variability in observations continued high throughout the years.
+
 ```{r}
+
 ggplot(median_year, aes(x = Year, y = Median_Exp_year)) +
   geom_line() +
   geom_smooth() +
   labs(y = "Median of Military Expenditure/GDP", x = "Years", title = "Worldwide Median of Military Expenditure/GDP per Year")
+
 ```
 
+This plot shows the evolution of worldwide Military Expenditure/GDP medians throughout the years. A way to interpret the plot would be again through the Cold War, with a steady decrease throughout the years. The smoothed line shows that the variability in observations also steadily decreased.
+
 ```{r}
+
 ggplot(gini_military_tier, aes(x = Year, y = Median_Exp_year, color = GINI_tiers)) +
   geom_line() +
   labs(y = "Median of Military Expenditure/GDP", x = "Years", title = "Worldwide Median of Military Expenditure/GDP per Year", color = "Inequality Tiers")
   
 ```
 
+In this last plot, I tried to juxtapose with different colors the evolution of each tier of inequality as measured by their median GINI index throughout the years. The plot wasn't very helpful in terms of analytic distinctions. I still included it because it shows all three tiers didn't vary much in relation to one another, except perhaps for the number of outliers around the 70s and 80s.
 
+In conclusion, this exploratory data analysis and subsequent visualization suggest there is no clear relationship between income inequality and military expenditure in proportion to a country's GDP. Some variables might influence both of them in similar directions at times, like years for historical reasons. In addition to that, very socially unequal countries, which are probably poor, seem to spend relatively low with the military; conversely, countries who spend relatively a lot of money in the military seem to have less income inequality, probably because they are richer. Again, these outliers seem to be intuitive.
 
 ## Session info
 

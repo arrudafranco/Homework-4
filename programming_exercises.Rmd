@@ -8,6 +8,7 @@ output: github_document
 
 ```{r}
 library(tidyverse)
+library(knitr)
 ```
 
 ## Compute the number of unique values in each column of `iris`
@@ -16,21 +17,31 @@ library(tidyverse)
 
 ```{r}
 
-uniq_val <- function(a) {
-  output <- vector("numeric", ncol(a))
+uniq_for <- function(a) {
+  uniq_out <- array(dim = ncol(a))
+  len_out <- vector("integer", length = ncol(a))
   for (i in seq_along(a)){
-    output[i] <- length(unique(a[i]))
+    uniq_out[i] <- unique(a[i])
+    len_out[i] <- length(uniq_out[i])
   }
-  return(output)
+  return(len_out)
 }
 
-uniq_val(iris)
+uniq_for(iris)
 
 ```
 
 ### Using a `map` function
 
 ```{r}
+
+uniq_map <- function(a) {
+  uniq_val <- map(a, unique)
+  count_uniq <- map_int(uniq_val, length)
+  return(kable(count_uniq, col.names = "Unique Values", caption = "Count of Unique Values per Column"))
+}
+
+uniq_map(iris)
 
 ```
 

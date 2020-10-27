@@ -8,6 +8,7 @@ output: github_document
 
 ```{r}
 library(tidyverse)
+theme_set(theme_light())
 ```
 
 ## Write a function to import the data files
@@ -39,35 +40,53 @@ wb_gini_military <- map_df(full_countries, import_data) #Iterate importing funct
 
 ```{r}
 
-#overall mean of each variable through years in two line charts
-#scatterplot of all observations (if doesn't look ugly, if it does then just country averages). First option definitely looks ugly though
+median_year <- group_by(wb_gini_military, Year) %>%
+  summarize(Median_GINI_year = median(GINI),
+            Median_Exp_year = median(Military_Exp_GDP))
 
+gini_military_tier <- wb_gini_military %>%
+  mutate(GINI_tiers = ifelse(GINI < 35, "Low Inequality", NA),
+         GINI_tiers = ifelse(GINI >= 35 & GINI < 50, "Medium Inequality", GINI_tiers),
+         GINI_tiers = ifelse(GINI >= 50, "High Inequality", GINI_tiers)) %>%
+  group_by(Year, GINI_tiers) %>%
+  summarize(Median_GINI_year = median(GINI),
+            Median_Exp_year = median(Military_Exp_GDP))
 
-Inequality_Tiers = c("1" = 1:35, "2" = 35:50, "3" = 50:100)
-data_decade <- mutate(wb_gini_military, Decade = ((Year - 1900) %/% 10) * 10) %>%
-  #mutate(Inequality_Tier = fct_collapse(GINI,
-                             #  "Low_Ineq" = (GINI < 35),
-                            #  "High_Ineq" = (GINI > 50),
-                            #  "Med_Ineq" = (GINI > 34 & GINI < 51)))
-  group_by(Decade) %>%
-  mutate(Median_GINI = median(GINI)) %>%
-  mutate(Median_Exp = median(Military_Exp_GDP))
+ggplot(wb_gini_military, aes(y = GINI, x = Military_Exp_GDP)) +
+  geom_density_2d() +
+  labs(y = "GINI", x = "Military Expenditure/GDP", title = "Density of GINI x Military Expenditure/GDP Observations per Country per Year")
+```
 
-ggplot(data_decade, aes(y = GINI, x = Military_Exp_GDP)) +
-  geom_density_2d()
+#ggplot(median_country, aes(y = Median_GINI_country, x = Median_Exp_country)) +
+ # geom_density_2d() +
+  #labs(y = "GINI", x = "Military Expenditure/GDP", title = "Density of GINI x Military Expenditure/GDP Observations per Country Median per Year")
+  
   #Decent. Three perceptible clusters: very low military expenditure and high
 #Gini closer to the left axis; dense area around 1.5% expenditure and 30 Gini; no apparent
 #causality, but outliers are perpendicular not diagonal.
   
-ggplot(data_decade, aes(x = Decade, y = Median_GINI)) +
-  geom_line()
-ggplot(data_decade, aes(x = Year, y = Median_Exp)) +
-  geom_line()
-  
-  #theme(legend.position = "none")
-
-
+```{r}
+ggplot(median_year, aes(x = Year, y = Median_GINI_year)) +
+  geom_line() +
+  geom_smooth() +
+  labs(y = "Median of GINI", x = "Years", title = "Worldwide Median of GINI per Year")
 ```
+
+```{r}
+ggplot(median_year, aes(x = Year, y = Median_Exp_year)) +
+  geom_line() +
+  geom_smooth() +
+  labs(y = "Median of Military Expenditure/GDP", x = "Years", title = "Worldwide Median of Military Expenditure/GDP per Year")
+```
+
+```{r}
+ggplot(gini_military_tier, aes(x = Year, y = Median_Exp_year, color = GINI_tiers)) +
+  geom_line() +
+  labs(y = "Median of Military Expenditure/GDP", x = "Years", title = "Worldwide Median of Military Expenditure/GDP per Year", color = "Inequality Tiers")
+  
+```
+
+
 
 ## Session info
 

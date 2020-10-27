@@ -271,6 +271,32 @@ sqr_map(x)
 
 ## Write a function to calculate length of sides in a right-triangle using the Pythagorean Theorem
 
+``` r
+pyth_thm <- function(a = NA, b = NA, c = NA){ #The three arguments are set to NA by default
+  enough_cond <- is.na(a) + is.na(b) + is.na(c) #If any of the arguments is NA, they will add 1 to this count
+  numeric_cond <- is.numeric(a) + is.numeric(b) + is.numeric(c) #If any of the arguments is numerical, they will add 1 to this count
+  if (enough_cond == 2 | enough_cond == 0){ #If only one argument is passed to the function, then the NA count equals to 2; conversely, if three arguments are passed, the NA count equals to 0. In that case the function stops, hence the "enough" variable name.
+    stop()
+  }
+  else {
+    if (numeric_cond != 2){ #Given that the previous "if" statement limits this function to only two arguments, this particular "if" statement guarantees that it is necessary that the two arguments passed into this function are numerical.
+      stop()
+    }
+    else{ #This conditionals within the function detects which of the three arguments is blank. Then they proceed to apply the Pythagorean formula to the remaining arguments and print the answer.
+     if (is.na(c)){
+       print(paste("C =", as.character(sqrt(a^2 + b^2))))
+     }
+     if (is.na(b)){
+       print(paste("B =", as.character(sqrt(c^2 - a^2))))
+     }
+     if (is.na(a)){
+       print(paste("B =", as.character(sqrt(c^2 - b^2))))
+     }
+    }
+  }
+}
+```
+
 ## Session info
 
 ``` r
@@ -287,7 +313,7 @@ devtools::session_info()
     ##  collate  English_United States.1252  
     ##  ctype    English_United States.1252  
     ##  tz       America/Chicago             
-    ##  date     2020-10-26                  
+    ##  date     2020-10-27                  
     ## 
     ## - Packages -------------------------------------------------------------------
     ##  package     * version date       lib source        

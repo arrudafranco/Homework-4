@@ -17,13 +17,13 @@ library(knitr)
 
 ```{r}
 
+#Generalized the task into a function
+
 uniq_for <- function(a) {
-  uniq_out <- array(dim = ncol(a))
-  len_out <- vector("integer", length = ncol(a))
+  len_out <- vector("double", length = ncol(a)) #Set up the size of an empty vector to optimize iteration
   for (i in seq_along(a)){
-    uniq_out[i] <- unique(a[i])
-    print(uniq_out)
-    len_out[i] <- length(uniq_out[i])
+    uniq_out <- unique(a[i]) #Extract the unique values from each column of input
+    len_out[i] <- count(uniq_out) #Count the values in each iteration of uniq_out and store it in the previously empty vector
   }
   return(len_out)
 }

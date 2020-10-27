@@ -17,7 +17,7 @@ library(tidyverse)
 import_data <- function(a){
   read_csv(a, skip = 4) %>% #Skip first 4 misleading rows
   select(-c(X65, `Indicator Name`)) %>% #Drop unnecessary columns
-  pivot_longer(cols = c(4:63), names_to = "Year", values_to = "Value") %>% #Transform column names referencing years into a single variable
+  pivot_longer(cols = c(4:63), names_to = "Year", names_transform = list(Year = as.double), values_to = "Value") %>% #Transform column names referencing years into a single numerical variable
   pivot_wider(names_from = "Indicator Code", values_from = "Value") %>% #Transform rows of Indicators into columns
   select("Country Name", "Year", GINI = "SI.POV.GINI", Military_Exp_GDP = "MS.MIL.XPND.GD.ZS") %>% #Select relevant variables
   drop_na() #Drop rows with empty values
@@ -42,10 +42,29 @@ wb_gini_military <- map_df(full_countries, import_data) #Iterate importing funct
 #overall mean of each variable through years in two line charts
 #scatterplot of all observations (if doesn't look ugly, if it does then just country averages). First option definitely looks ugly though
 
-ggplot(wb_gini_military, aes(y = GINI, x = Military_Exp_GDP, color = `Country Name`)) +
-  geom_jitter() +
-  geom_smooth() +
-  theme(legend.position = "none")
+
+Inequality_Tiers = c("1" = 1:35, "2" = 35:50, "3" = 50:100)
+data_decade <- mutate(wb_gini_military, Decade = ((Year - 1900) %/% 10) * 10) %>%
+  #mutate(Inequality_Tier = fct_collapse(GINI,
+                             #  "Low_Ineq" = (GINI < 35),
+                            #  "High_Ineq" = (GINI > 50),
+                            #  "Med_Ineq" = (GINI > 34 & GINI < 51)))
+  group_by(Decade) %>%
+  mutate(Median_GINI = median(GINI)) %>%
+  mutate(Median_Exp = median(Military_Exp_GDP))
+
+ggplot(data_decade, aes(y = GINI, x = Military_Exp_GDP)) +
+  geom_density_2d()
+  #Decent. Three perceptible clusters: very low military expenditure and high
+#Gini closer to the left axis; dense area around 1.5% expenditure and 30 Gini; no apparent
+#causality, but outliers are perpendicular not diagonal.
+  
+ggplot(data_decade, aes(x = Decade, y = Median_GINI)) +
+  geom_line()
+ggplot(data_decade, aes(x = Year, y = Median_Exp)) +
+  geom_line()
+  
+  #theme(legend.position = "none")
 
 
 ```

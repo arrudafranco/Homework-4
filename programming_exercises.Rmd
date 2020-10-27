@@ -16,6 +16,16 @@ library(tidyverse)
 
 ```{r}
 
+uniq_val <- function(a) {
+  output <- vector("numeric", ncol(a))
+  for (i in seq_along(a)){
+    output[i] <- length(unique(a[i]))
+  }
+  return(output)
+}
+
+uniq_val(iris)
+
 ```
 
 ### Using a `map` function
